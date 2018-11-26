@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spring.reply">
+	<insert id="insert">
+		INSERT INTO reply(rContent, rWriteDate, bNum, userID) VALUES(#{rContent}, now(), #{bNum}, #{userID})
+	</insert>
+	
+	<delete id="delete">
+		DELETE FROM reply WHERE rNum = #{rNum}
+	</delete>
+	
+	<select id="list" resultType="com.spring.board.domain.ReplyVO">
+		SELECT * FROM reply WHERE bNum = #{bNum} ORDER BY rNum DESC
+	</select>
+
+	<select id="selectMaxRnum" resultType="int">
+		SELECT max(rNum) FROM reply
+	</select>
+</mapper>
