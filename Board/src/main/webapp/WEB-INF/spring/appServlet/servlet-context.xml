@@ -3,9 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
@@ -21,7 +23,31 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
+	<beans:bean id="loginInterceptor" 
+	class="com.spring.board.interceptor.LoginInterceptor">
+	</beans:bean>
+	<beans:bean id="sessionInterceptor" 
+	class="com.spring.board.interceptor.SessionInterceptor">
+	</beans:bean>
+	<interceptors>
+		<interceptor>
+			<mapping path="/user/login"/>
+			<beans:ref bean="loginInterceptor"/>
+		</interceptor>
+		
+		<interceptor>
+			<mapping path="/board/*"/>
+			<mapping path=""/>
+			<beans:ref bean="sessionInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
 	<context:component-scan base-package="com.spring.board.controller" />
 	<context:component-scan base-package="com.spring.board.persistent" />
+	<context:component-scan base-package="com.spring.board.service" />
+	<context:component-scan base-package="com.spring.board.aop" />
+	<context:component-scan base-package="com.spring.board.interceptor" />
+	
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	
 </beans:beans>

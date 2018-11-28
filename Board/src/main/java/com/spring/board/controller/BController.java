@@ -15,6 +15,7 @@ import com.spring.board.domain.BoardVO;
 import com.spring.board.domain.ReplyVO;
 import com.spring.board.persistent.BoardDAO;
 import com.spring.board.persistent.ReplyDAO;
+import com.spring.board.service.BoardService;
 import com.spring.board.util.MyUtils;
 
 //Controller, Repository, Service, Component
@@ -22,7 +23,7 @@ import com.spring.board.util.MyUtils;
 public class BController {
 
 	@Autowired
-	private BoardDAO boardDAO;
+	private BoardService boardService;
 	
 	@Autowired
 	private ReplyDAO replyDAO;
@@ -36,7 +37,7 @@ public class BController {
 	
 	@RequestMapping("/board/list")
 	public String boardList(Model model, @RequestParam(defaultValue="1") int page) throws Exception{	
-		List<BoardVO> list = boardDAO.list(page);
+		List<BoardVO> list = boardService.list(page);
 		model.addAttribute("list", list);
 		model.addAttribute("page", page);
 		return "/board/list";
@@ -50,27 +51,26 @@ public class BController {
 	//@RequestParam String bTitle
 	@RequestMapping(value="/board/write", method= RequestMethod.POST)
 	public String boardWrite(BoardVO boardVO) throws Exception{
-		boardDAO.insert(boardVO);
+		boardService.insert(boardVO);
 		return "redirect:/board/list";
 	}
 	
 	@RequestMapping("/admin/board/delete")
 	public String adminBoardDelete(@RequestParam int bNum, HttpSession session) throws Exception{	
-		boardDAO.delete(bNum);
+		boardService.delete(bNum);
 		return "redirect:/board/list";
 	}
 	
 	@RequestMapping("/board/delete")
 	public String boardDelete(@RequestParam int bNum) throws Exception{	
-		boardDAO.delete(bNum);
+		boardService.delete(bNum);
 		return "redirect:/board/list";
 	}
 	
 	@RequestMapping("/board/detail")
 	public String boardDetail(@RequestParam int bNum, Model model) throws Exception{	
 	    //조회수 증가
-		boardDAO.updateReadCount(bNum);
-		BoardVO boardVO = boardDAO.select(bNum);
+		BoardVO boardVO = boardService.detailService(bNum);
 		List<ReplyVO> list = replyDAO.list(bNum);
 		String result = MyUtils.getYoutubeMovie(boardVO.getbContent());
 		boardVO.setbContent(result);
@@ -82,15 +82,16 @@ public class BController {
 	@RequestMapping("/board/updateForm")
 	public String boardUpdateForm
 	(@RequestParam int bNum, Model model) throws Exception{	
-		BoardVO boardVO = boardDAO.select(bNum);
+		BoardVO boardVO = boardService.select(bNum);
 		model.addAttribute("boardVO", boardVO);
 		return "/board/updateForm";
 	}	
 	
 	@RequestMapping(value="/board/update", method= RequestMethod.POST)
 	public String boardUpdate(BoardVO boardVO) throws Exception{
-		boardDAO.update(boardVO);
+		boardService.update(boardVO);
 		return "redirect:/board/list";
 	}
+	
 	
 }

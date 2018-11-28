@@ -4,6 +4,7 @@ pageEncoding="UTF-8" %>
 
 <%@include file="header.jsp" %>
 
+<c:out value="${sessionScope.userEmail}" />
 
 <%@include file="footer.jsp" %>
 

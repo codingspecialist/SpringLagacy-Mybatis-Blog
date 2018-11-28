@@ -24,12 +24,25 @@
       <li class="nav-item">
         <a class="nav-link" href="/board/list?page=1">게시판</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/user/loginForm">로그인</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/user/joinForm">회원가입</a>
-      </li>    
+      
+      <c:choose>
+      	<c:when test="${empty sessionScope.userEmail}">
+      	  <li class="nav-item">
+	        <a class="nav-link" href="/user/loginForm">로그인</a>
+	      </li>
+	      <li class="nav-item">
+	        <a class="nav-link" href="/user/joinForm">회원가입</a>
+	      </li>  
+      	</c:when>
+      	<c:otherwise>
+ 	      <li class="nav-item">
+	        <a class="nav-link" href="/user/logout">로그아웃</a>
+	      </li>       	
+      	</c:otherwise>
+      </c:choose>
+ 
+      
+       
     </ul>
   </div>  
 </nav>
